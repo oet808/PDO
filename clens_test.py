@@ -6,7 +6,6 @@
 The test version does include a single scenario and single ensemble run.
 """
  
-
 # Path to the directory with the source netcdf files
 DPATH="/data/elisontimm_scr/DATA/CESM_LENS/" # must always end with '/'
 
@@ -15,6 +14,7 @@ OUTPATH="/data/elisontimm_scr/DATA/CESM_LENS/DERIVED/" # must always end with '/
 
 # CMIP5 scenarios
 SCENARIOLIST=["historical"]
+
 # multi-model ensemble (like CMIP5) should use MODELLIST
 # to iterate over model members
 MODEL="CESM"
@@ -27,12 +27,14 @@ VARLIST=["SST"]
 OUTGRID="/network/rit/lab/elisontimmlab_rit/DATA/NCEP/gridfile.nc"
 
 
-
 ###############################################################################
 # CESM model specific variables
 ###############################################################################
 
 ENSEMBLELIST=['001']
+
+
+
 
 ###############################################################################
 # I use this dictionary to 'translate' the CMIP5 
@@ -43,8 +45,18 @@ ENSEMBLELIST=['001']
 # Use of nested dictionaries allows for additional 
 # 'translations'
 ###############################################################################
-TRANSLATE={'historical':{'scen':'B20TRC5CNBDRD','time':'192001-200512'},\
-                    'rcp85':{'scen':'BRCP85C5CNBDRD','time':'200601-208012'}}
+TRANSLATE={'historical':{'scen':'B20TRC5CNBDRD','time':'192001-200512',"first_year":1920},\
+                    'rcp85':{'scen':'BRCP85C5CNBDRD','time':'200601-208012',"first_year":2006}}
 
 
-#TESTFILE="b.e11.B20TRC5CNBDRD.f09_g16.002.pop.h.SST.192001-200512.nc"
+###############################################################################
+# Specific settings for data processing with CDO
+###############################################################################
+
+# APPLY time coordinate correction to when calculating annual mean data from monthly data
+CORRECT_ANN_CALENDAR=True 
+
+# climatology: start and end years for the averaging
+START=1975
+END=2005
+

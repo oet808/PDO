@@ -1,6 +1,6 @@
 #!/usr/bin/python
 ###############################################################################
-# 2018-07-13 script that calls CDO
+# Script that calls CDO
 # linux command to calculate annual mean
 # This is the unweighted mean (Jan, Feb, Mar, Apr hav same weight)
 # IMPORTANT: THE CLENS monthly mean data have a time axis shifted 
@@ -31,14 +31,28 @@ def calc_ann_mean(scen,run,v):
     # original data files
     outfile=MODEL+"_"+cesmscen+"_"+v+"_"+cesmtime+"_"+run+\
     "_"+app+".nc" 
-    cdo="cdo -v -timselmean,12 "+OUTPATH+infile\
-    +" "+OUTPATH+outfile
-    print(cdo)
-    os.system(cdo)
+    if CORRECT_ANN_CALENDAR:
+        first_year=str(TRANSLATE[scen]['first_year'])
+        cdo="cdo -v -timselmean,12 "+OUTPATH+infile+" buffer.nc"
+        print(cdo)
+        os.system(cdo)
+        print("use cdo to overwrite time dimension / correct the calendar")
+        cdo="cdo -v -settaxis,"+first_year+"-01-01,00:00:00,365day buffer.nc buffer2.nc\n"
+        cdo=cdo+"cdo  -setcalendar,standard buffer2.nc "+OUTPATH+outfile
+        print(cdo)
+        os.system(cdo)
+
+    else:
+        cdo="cdo -v -timselmean,12 "+OUTPATH+infile\
+        +" "+OUTPATH+outfile
+        print(cdo)
+        os.system(cdo)
+    
     print ("Infile: "+infile)
     print ("Outfile:"+outfile)
     print ("Folder: "+OUTPATH)
     return
+
 
 # Loop over scenarios
 iscen=0

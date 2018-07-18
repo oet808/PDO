@@ -27,7 +27,6 @@ VARLIST=["SST"]
 OUTGRID="/network/rit/lab/elisontimmlab_rit/DATA/NCEP/gridfile.nc"
 
 
-
 ###############################################################################
 # CESM model specific variables
 ###############################################################################
@@ -37,6 +36,26 @@ ENSEMBLELIST=['001','002','003','004','005','006','007','008','009','010','011',
             '022','023','024','025','026','027','028','029','030','031',\
             '032','033','034','035']
 
-TRANSLATE={'historical':{'scen':'B20TRC5CNBDRD','time':'192001-200512'},\
-                    'rcp85':{'scen':'BRCP85C5CNBDRD','time':'200601-208012'}}
-TESTFILE="b.e11.B20TRC5CNBDRD.f09_g16.002.pop.h.SST.192001-200512.nc"
+###############################################################################
+# I use this dictionary to 'translate' the CMIP5 
+# scenario labels to CLENS description of the scenarios
+# this should help to write code for CLENS and CMIP5
+# multi-model ensemble data processing. Currently
+# this is dealing with the different file name conventions.
+# Use of nested dictionaries allows for additional 
+# 'translations'
+###############################################################################
+TRANSLATE={'historical':{'scen':'B20TRC5CNBDRD','time':'192001-200512',"first_year":1920},\
+                    'rcp85':{'scen':'BRCP85C5CNBDRD','time':'200601-208012',"first_year":2006}}
+
+
+###############################################################################
+# Specific settings for data processing with CDO
+###############################################################################
+
+# APPLY time coordinate correction to when calculating annual mean data from monthly data
+CORRECT_ANN_CALENDAR=True 
+
+# climatology: start and end years for the averaging
+START=1975
+END=2005

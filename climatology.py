@@ -43,7 +43,7 @@ for scen in SCENARIOLIST:
     for run in ENSEMBLELIST:
         i=0
         for v in VARLIST:
-            calc_ann_mean(scen,run,v)
+            calc_clim(scen,run,v,START,END)
             i+=1
     nmodel+=1
     print ("----------------------------------------------------------")
