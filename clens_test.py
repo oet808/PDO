@@ -13,7 +13,7 @@ DPATH="/data/elisontimm_scr/DATA/CESM_LENS/" # must always end with '/'
 OUTPATH="/data/elisontimm_scr/DATA/CESM_LENS/DERIVED/" # must always end with '/'
 
 # CMIP5 scenarios
-SCENARIOLIST=["historical"]
+SCENARIOLIST=["historical","rcp85"]
 
 # multi-model ensemble (like CMIP5) should use MODELLIST
 # to iterate over model members

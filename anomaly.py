@@ -21,8 +21,10 @@ def calc_ano(scen,run,v,startyr,endyr):
     app="ano" # app is used in the output file name
     cesmscen=TRANSLATE[scen]['scen']
     cesmtime=TRANSLATE[scen]['time']
+    clim_scen=TRANSLATE['historical']['scen']
+    clim_time=TRANSLATE['historical']['time']
     infile=MODEL+"_"+cesmscen+"_"+v+"_"+cesmtime+"_"+run+"_ann.nc"
-    infile_clim=MODEL+"_"+cesmscen+"_"+v+"_"+cesmtime+"_"+run+"_ann_clim.nc"
+    infile_clim=MODEL+"_"+clim_scen+"_"+v+"_"+clim_time+"_"+run+"_ann_clim.nc"
     # OUTPATH: Input path and output path are the same.
     outfile=MODEL+"_"+cesmscen+"_"+v+"_"+cesmtime+"_"+run+\
     "_ann_"+app+".nc" 

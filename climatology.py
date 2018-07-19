@@ -36,9 +36,9 @@ def calc_clim(scen,run,v,startyr,endyr):
     print ("Folder: "+OUTPATH)
     return
 
-# Loop over scenarios
+# Loop over scenarios (historical only, usually)
 iscen=0
-for scen in SCENARIOLIST:
+for scen in ['historical']:
     nmodel=0
     for run in ENSEMBLELIST:
         i=0

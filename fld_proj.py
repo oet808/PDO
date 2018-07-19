@@ -80,7 +80,7 @@ app="pdo_proj"
 # RESID=False uses anomaly data
 # (global mean trend signal included)
 ###############################################################################
-RESID=False
+RESID=True
 
 iscen=-1
 
@@ -99,7 +99,7 @@ for scen in SCENARIOLIST:
             eoftime=TRANSLATE['historical']['time']
             cesmscen=TRANSLATE[scen]['scen']
             cesmtime=TRANSLATE[scen]['time']
-            infile_eof=MODEL+"_"+eofscen+"_"+v+"_"+cesmtime+"_"+run+'_ann_ano_resid_eof.nc'
+            infile_eof=MODEL+"_"+eofscen+"_"+v+"_"+eoftime+"_"+run+'_ann_ano_resid_eof.nc'
             if RESID:
                 infile=MODEL+"_"+cesmscen+"_"+v+"_"+cesmtime+"_"+run+"_ann_ano_resid.nc"
                 outfile=MODEL+"_"+cesmscen+"_"+v+"_"+cesmtime+"_"+run+"_ann_ano_resid_"+app+".nc"

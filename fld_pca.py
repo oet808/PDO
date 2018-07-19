@@ -145,8 +145,8 @@ app="pca"
 RESID=True
 
 iscen=0
-# LOOP OVER SCENARIOS
-for scen in SCENARIOLIST:
+# LOOP OVER SCENARIOS: (usually only historical, but keep loop structure)
+for scen in ['historical']:
     nmodel=0
     i=-1
     for run in ENSEMBLELIST:
