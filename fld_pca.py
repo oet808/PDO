@@ -9,6 +9,14 @@
 # Eigenvectors (PCA pattern) in eof.nc
 # PC time series and explained variance in pc.nc
 ###############################################################################
+# HISTORY:
+# 2018-07-19:OET: Corrected in function save_results the attributes 
+#   for variable eof in netcdf output.
+#   Updated the regional domain selection: lat,lon boundaries are now 
+#   added to the clens.py module as a tuple (lonw,lone,lats,latn) 
+#   REGION_PDO.    
+###############################################################################
+
 import xarray
 import numpy as np
 import os
@@ -97,11 +105,9 @@ def save_result(eof,pc,time,lat,lon,expvar,copy_from_source,dflt_units='k'):
     lev=np.arange(1,(len(eof[:,0,0])+1),1)
     xeof=xarray.DataArray(eof,coords=[lev,lat,lon],dims=['lev','lat','lon'])
     xeof.name='eof'
-    try:
-        xeof.attrs['long_name']=ncsrc.long_name # check if that is right
-    except:
-        print("save_result: could not find attribute 'long_name' for copying")
-        xeof.attrs['units']='1' # eigenvectors of unit length
+    # 2018-07-19 corrected long_name and units attribute for eofs
+    xeof.attrs['long_name']="eigenvector" # check if that is right
+    xeof.attrs['units']='1' # eigenvectors of unit length
     ds1=xarray.Dataset({'eof':xeof})
     print(ds1)
     ds1.to_netcdf('eof.nc',format="NETCDF4")
@@ -129,13 +135,13 @@ def save_result(eof,pc,time,lat,lon,expvar,copy_from_source,dflt_units='k'):
 # (used in output file name, added just before input file name '*.nc')
 app="pca"
 
-#########################################
+###############################################################################
 # If RESID is True then the input data is
 # the linear regression residual
 # (removed global mean trend)
 # RESID=False uses anomaly data
 # (global mean trend signal included)
-######################################### 
+###############################################################################
 RESID=True
 
 iscen=0
@@ -166,9 +172,11 @@ for scen in SCENARIOLIST:
             # select North Pacific Domain and apply PCA
             # to the residuals
             #################################################
-            is_lon=np.logical_and(nc1.lon.values>=110,nc1.lon.values<=260)
+            sellon=REGION_PDO[0:2]
+            sellat=REGION_PDO[2:4]
+            is_lon=np.logical_and(nc1.lon.values>=sellon[0],nc1.lon.values<=sellon[1])
             nlon=np.sum(is_lon)
-            is_lat=np.logical_and(nc1.lat.values>=20,nc1.lat.values<=70)
+            is_lat=np.logical_and(nc1.lat.values>=sellat[0],nc1.lat.values<=sellat[1])
             nlat=np.sum(is_lat)
             buffer=fielddata[:,:,is_lon]
             res_npac=buffer[:,is_lat,:]
@@ -221,9 +229,7 @@ for scen in SCENARIOLIST:
             print (OUTPATH+outfile_pc)
             os.system("mv eof.nc "+OUTPATH+outfile_eof)
             os.system("mv pc.nc "+OUTPATH+outfile_pc)
-    print ("----------------------------------------------------------")
-    print ("stats for CMIP5 simulations "+scen+" : variable "+v)
-    print ("models: "+str(nmodel))
+        nmodel+=1
     iscen+=1
 print ("done")
 

@@ -53,9 +53,18 @@ TRANSLATE={'historical':{'scen':'B20TRC5CNBDRD','time':'192001-200512',"first_ye
 # Specific settings for data processing with CDO
 ###############################################################################
 
-# APPLY time coordinate correction to when calculating annual mean data from monthly data
+# APPLY time coordinate correction to when calculating 
+# annual mean data from monthly data
 CORRECT_ANN_CALENDAR=True 
 
 # climatology: start and end years for the averaging
 START=1975
 END=2005
+
+###############################################################################
+# Define lat-lon region for spatially restricted analyses
+###############################################################################
+# For the PDO analysis (PCA and projection index)
+REGION_PDO=(110.0,260.0,20.0,70.0)
+# PCA (EOF) mode number for PDO (default value is first mode is PDO)
+MODE_PDO=0 # first PCA mode should be PDO in models
