@@ -23,7 +23,7 @@ import os
 from sklearn.decomposition import PCA
 #import sys
 #sys.path.append("./modules")
-from clens_test import *
+from clens import *
 
 # for testing use the plot utilities
 # for faster execution of script at startup
@@ -82,7 +82,6 @@ def proj_field(x,e):
     is_x=~np.isnan(vx)
     is_e=~np.isnan(ve)
     is_use=np.logical_and(is_x,is_e)
-    ve=np.reshape(e,np.size(x))
     rhelp=np.dot(vx[is_use],ve[is_use])/np.sqrt(np.dot(ve[is_use],ve[is_use]))
     return rhelp
 
@@ -167,7 +166,7 @@ for scen in ['historical']:
             nc1=xarray.open_dataset(OUTPATH+infile)
             ntime1=nc1.time.size
             fielddata=nc1[v].values[:]
-            nc2=xarray.open_dataset(OUTPATH+infile)
+            ###nc2=xarray.open_dataset(OUTPATH+infile)
             #################################################
             # select North Pacific Domain and apply PCA
             # to the residuals
@@ -223,6 +222,8 @@ for scen in ['historical']:
             i=i+1
             # renaming the files eof.nc and pc.nc
             #
+            print ("Input file for PCA (EOF) analysis: ")
+            print(OUTPATH+infile)
             print ("EOF pattern written to:")
             print (OUTPATH+outfile_eof)
             print ("PC time series and explained variances written to:")
@@ -255,7 +256,7 @@ print ("done")
 # helpful for control and debugging
 # plot time series
 
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 #plt.plot(nc2.time.values,x)
 
 # test field regression results

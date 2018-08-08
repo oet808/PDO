@@ -19,7 +19,7 @@ def regrid(scen,run,v):
     """
     cesmscen=TRANSLATE[scen]['scen']
     cesmtime=TRANSLATE[scen]['time']
-    infile='b.e11.'+cesmscen+'.f09_g16.002.pop.h.'+v+\
+    infile='b.e11.'+cesmscen+'.f09_g16.'+run+'.pop.h.'+v+\
     '.'+cesmtime+'.nc'
     source=DPATH+"/"+infile
     # extract variable
@@ -41,7 +41,7 @@ def regrid(scen,run,v):
 import os
 #import sys
 #sys.path.append("./modules")
-from clens_test import *
+from clens import *
 # Loop over scenarios
 iscen=0
 for scen in SCENARIOLIST:

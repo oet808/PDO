@@ -20,7 +20,7 @@ import numpy as np
 from scipy.stats import linregress
 #import sys
 #sys.path.append("./modules")
-from clens_test import *
+from clens import *
 
 def save_result(scen,run,varname,x,time,lat,lon,copy_from_source,dflt_units='k'):
     # function that saves results in netcdf output format

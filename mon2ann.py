@@ -11,7 +11,7 @@
 import os
 #import sys
 #sys.path.append("./modules")
-from clens_test import *
+from clens import *
 
 def calc_ann_mean(scen,run,v):
     """calculates annual mean from monthly mean data using CDO.
@@ -33,6 +33,7 @@ def calc_ann_mean(scen,run,v):
     "_"+app+".nc" 
     if CORRECT_ANN_CALENDAR:
         first_year=str(TRANSLATE[scen]['first_year'])
+        os.system("rm buffer.nc buffer2.nc")
         cdo="cdo -v -timselmean,12 "+OUTPATH+infile+" buffer.nc"
         print(cdo)
         os.system(cdo)

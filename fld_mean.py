@@ -9,7 +9,7 @@
 import os
 #import sys
 #sys.path.append("./modules")
-from clens_test import *
+from clens import *
 
 def global_mean(scen,run,v):
     """Calculates the global mean (time series) using CDO.

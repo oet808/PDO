@@ -39,13 +39,12 @@ def proj_field(x,e):
     rhelp=np.dot(vx[is_use],ve[is_use])/np.sqrt(np.dot(ve[is_use],ve[is_use]))
     return rhelp
 
-def save_result(x,time,lev,copy_from_source,dflt_units='k'):
+def save_result(x,time,copy_from_source,dflt_units='k'):
     """Saves results from projection in netcdf output format.
     
     Input parameters:
-        x: projection indices (2dim array with time,mode) 
+        x: projection indices (1dim array with time) 
         time: coordinates from input netcdf file
-        lev: level coordinates (PCA modes)
         copy_from_source: the field variable from the source  netcdf file 
      
     The copy_from_source provides a netcdf source file (the input field
@@ -54,8 +53,7 @@ def save_result(x,time,lev,copy_from_source,dflt_units='k'):
     Output contains the projection index time series.
     """
     ncsrc=copy_from_source # use shorter variable name
-    lev=np.arange(1,(len(x[0,:])+1),1)
-    xproj=xarray.DataArray(x,coords=[time,lev],dims=['time','lev'])
+    xproj=xarray.DataArray(x,coords=[time],dims=['time'])
     xproj.name="proj"
     xproj.attrs["long_name"]="projection index"
     try:
@@ -66,12 +64,12 @@ def save_result(x,time,lev,copy_from_source,dflt_units='k'):
         xproj.attrs['units']=dflt_units # eigenvectors of unit length
         xproj.attrs['info']="projection onto ensemble mean EOF pattern in eof_ens_mean.nc"
     ds=xarray.Dataset({'proj':xproj})
-    ds.to_netcdf('proj_ensmean.nc',format="NETCDF4")
+    ds.to_netcdf('proj.nc',format="NETCDF4")
     return ds
 
 # APPLIED OPERATION 
 # (used in output file name, added just before input file name '*.nc')
-app="pdo_proj_ensmean""
+app="pdo_proj_ensmean"
 
  
 
@@ -95,13 +93,13 @@ for scen in SCENARIOLIST:
         for v in VARLIST:
             # 3-dim field
             # EOF projection eignevectors 
-            # The porjection vector is in standard application from historical scenario 
+            # The projection vector is loaded from eof_ens_mean.nc 
             # eofscen is set as default to the historical scenario
             eofscen=TRANSLATE['historical']['scen']
             eoftime=TRANSLATE['historical']['time']
             cesmscen=TRANSLATE[scen]['scen']
             cesmtime=TRANSLATE[scen]['time']
-            infile_eof=MODEL+"_"+eofscen+"_"+v+"_"+eoftime+"_"+run+'_ann_ano_resid_eof.nc'
+            infile_eof=MODEL+"_"+eofscen+"_"+v+"_"+eoftime+"_ensmean_ann_ano_resid_eof.nc"
             if RESID:
                 infile=MODEL+"_"+cesmscen+"_"+v+"_"+cesmtime+"_"+run+"_ann_ano_resid.nc"
                 outfile=MODEL+"_"+cesmscen+"_"+v+"_"+cesmtime+"_"+run+"_ann_ano_resid_"+app+".nc"
@@ -117,8 +115,8 @@ for scen in SCENARIOLIST:
             ntime1=nc1.time.size
             field=(nc1[v].values[:]).squeeze()  # save use for annual anomaly data
             nc2=xarray.open_dataset(OUTPATH+infile_eof)
-            eof=(nc2['eof'].values[:])
-            nmodes=len(eof[:,0,0])
+            eof=(nc2['eofm'].values[:]) # eofm is variable name in netcdf file
+            nmodes=1
             #######################################################################
             # select North Pacific Domain and apply PCA
             # to the residuals
@@ -137,8 +135,8 @@ for scen in SCENARIOLIST:
             nlon2=np.sum(is_lon2)
             is_lat2=np.logical_and(nc2.lat.values>=sellat[0],nc2.lat.values<=sellat[1])
             nlat2=np.sum(is_lat2)
-            buffer=eof[:,:,is_lon2]
-            field_eof=buffer[:,is_lat2,:]
+            buffer=eof[:,is_lon2]
+            field_eof=buffer[is_lat2,:]
 
             #######################################################################
             # Projection of field data onto eigenvector
@@ -146,15 +144,12 @@ for scen in SCENARIOLIST:
             #######################################################################
             t=0
             ntime=len(field_npac[:,0,0])
-            proj=np.zeros((ntime,nmodes))
+            proj=np.zeros(ntime) 
             while t<ntime:
-                m=0
-                while m <nmodes:
-                    proj[t,m]=proj_field(field_npac[t,:,:],field_eof[m,:,:])
-                    m+=1
+                proj[t]=proj_field(field_npac[t,:,:],field_eof[:,:])
                 #print(t)
                 t=t+1
-            ds=save_result(proj,nc1.time,nc2.lev,copy_from_source=nc1[v]) 
+            ds=save_result(proj,nc1.time,copy_from_source=nc1[v]) 
             if False:
                 fig,ax=plt.subplots(2,2)
                 ax[0,0].plot(nc1['time'],proj[:,MODE_PDO])

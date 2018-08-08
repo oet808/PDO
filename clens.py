@@ -68,3 +68,5 @@ END=2005
 REGION_PDO=(110.0,260.0,20.0,70.0)
 # PCA (EOF) mode number for PDO (default value is first mode is PDO)
 MODE_PDO=0 # first PCA mode should be PDO in models
+# Lowpass filter cutoff frequency: f=1/(time steps)
+LPCUTOFF=1./15.0 

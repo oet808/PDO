@@ -1,39 +1,40 @@
 #!/usr/bin/python
 ###############################################################################
-# Script that calls CDO linux command to calculate 
-# the annual anomalies with respect to the long-term climatology.
+# Script that calls CDO
+# use cdo for a quick (FFT-basd lowpass filtering)
+# The -detrend option is used by default (as recommended for FFT calculations)
+# cdo  lowpass,0.25 -detrend CESM_BRCP85C5CNBDRD_SST_200601-208012_001_ann_ano_pdo_proj.nc test.nc
 ###############################################################################
 
 import os
+from numpy import  round
 #import sys
 #sys.path.append("./modules")
 from clens import *
 
-def calc_ano(scen,run,v,startyr,endyr):
-    """Subtracts the climatology from the annual mean data using CDO.
-    
+
+def lowpass(scen,run,v,f=0.1):
+    """Low-pss filtering using CDO.
+
     Input variables:
         scen,run,v: strings indicating the scenario, 
         ensemble member run, and the variable name.
         These variables are used to form the netcdf file names
         that are processed with cdo.
+        f: is the cut-off frequency (1/timesteps). Default is decadal low-pass filter (for annual data).
     """
-    app="ano" # app is used in the output file name
+    app="lp" # app is used in the output file name
     cesmscen=TRANSLATE[scen]['scen']
     cesmtime=TRANSLATE[scen]['time']
-    clim_scen=TRANSLATE['historical']['scen']
-    clim_time=TRANSLATE['historical']['time']
-    infile=MODEL+"_"+cesmscen+"_"+v+"_"+cesmtime+"_"+run+"_ann.nc"
-    infile_clim=MODEL+"_"+clim_scen+"_"+v+"_"+clim_time+"_"+run+"_ann_clim.nc"
+    infile=MODEL+"_"+cesmscen+"_"+v+"_"+cesmtime+"_"+run+"_ann_ano_resid_pdo_proj.nc"
     # OUTPATH: Input path and output path are the same.
     outfile=MODEL+"_"+cesmscen+"_"+v+"_"+cesmtime+"_"+run+\
-    "_ann_"+app+".nc" 
-    cdo="cdo -v sub "+OUTPATH+infile+" "+OUTPATH+infile_clim+" "+\
-    OUTPATH+outfile
+    "_ann_ano_resid_pdo_proj_"+app+".nc" 
+    cdo="cdo lowpass,"+str(round(f,4))+" -detrend "+\
+        OUTPATH+infile+" "+OUTPATH+outfile
     print(cdo)
     os.system(cdo)
     print ("Infile: "+infile)
-    print ("Climatology: "+infile_clim)
     print ("Outfile:"+outfile)
     print ("Folder: "+OUTPATH)
     return
@@ -45,7 +46,7 @@ for scen in SCENARIOLIST:
     for run in ENSEMBLELIST:
         i=0
         for v in VARLIST:
-            calc_ano(scen,run,v,START,END)
+            lowpass(scen,run,v,f=LPCUTOFF)
             i+=1
     nmodel+=1
     print ("----------------------------------------------------------")

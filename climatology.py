@@ -8,7 +8,7 @@
 import os
 #import sys
 #sys.path.append("./modules")
-from clens_test import *
+from clens import *
 
 def calc_clim(scen,run,v,startyr,endyr):
     """Calculates annual mean from monthly mean data using CDO.
