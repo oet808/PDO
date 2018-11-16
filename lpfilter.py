@@ -26,10 +26,10 @@ def lowpass(scen,run,v,f=0.1):
     app="lp" # app is used in the output file name
     cesmscen=TRANSLATE[scen]['scen']
     cesmtime=TRANSLATE[scen]['time']
-    infile=MODEL+"_"+cesmscen+"_"+v+"_"+cesmtime+"_"+run+"_ann_ano_resid_pdo_proj.nc"
+    infile=MODEL+"_"+cesmscen+"_"+v+"_"+cesmtime+"_"+run+"_ann_ano_pdo_proj.nc"
     # OUTPATH: Input path and output path are the same.
     outfile=MODEL+"_"+cesmscen+"_"+v+"_"+cesmtime+"_"+run+\
-    "_ann_ano_resid_pdo_proj_"+app+".nc" 
+    "_ann_ano_pdo_proj_"+app+".nc" 
     cdo="cdo lowpass,"+str(round(f,4))+" -detrend "+\
         OUTPATH+infile+" "+OUTPATH+outfile
     print(cdo)

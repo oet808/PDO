@@ -29,7 +29,7 @@ def load_proj_time_series(scen,ens,v,mode):
     """
     cesmscen=TRANSLATE[scen]['scen']
     cesmtime=TRANSLATE[scen]['time']
-    infile=MODEL+"_"+cesmscen+"_"+v+"_"+cesmtime+"_"+run+"_ann_ano_resid_pdo_proj_lp.nc"
+    infile=MODEL+"_"+cesmscen+"_"+v+"_"+cesmtime+"_"+run+"_ann_ano_pdo_proj_lp.nc"
     nc=xarray.open_dataset(OUTPATH+infile)
     time=nc['time'].data[:]
     index=nc['proj'].data[:,mode]
@@ -92,7 +92,7 @@ SCENCOLORLIST={"historical":"blue","rcp85":"red"}
 STARTYRLIST={"historical":1996,"rcp85":2026}
 ENDYRLIST={"historical":2005,"rcp85":2035}
 
-for scen in ['rcp85']:                                 
+for scen in ['historical']:                                 
     nmodel=0      
     cesmscen=TRANSLATE[scen]['scen']      
     cesmtime=TRANSLATE[scen]['time']
@@ -149,7 +149,7 @@ print (40*'-')
 isort=np.argsort(pdomean)
 k=0
 
-fout=open(OUTPATH+cesmscen+"_ens_rank_pdo_index.csv",'w')
+fout=open(OUTPATH+cesmscen+"_ens_rank_pdo_index_ann_ano.csv",'w')
 fout.write("rank,run,pdo\n")
 k=1
 for i in isort:
@@ -158,5 +158,5 @@ for i in isort:
     k+=1
 fout.close()
 print ("Output for ensemble member ranking for PDO anoamlies:")
-print (OUTPATH+cesmscen+"_ens_rank_pdo_index.csv")
+print (OUTPATH+cesmscen+"_ens_rank_pdo_index_ann_ano.csv")
 

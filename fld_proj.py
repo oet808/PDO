@@ -3,7 +3,7 @@
 # calculate projection index for a time-varying field
 # using eofs (or any other pattern) as vectors for the projection
 # This script works with the PCA results of the North Pacific domain.
-# This script uses the ensemble members' mean eof projection 
+# This script uses the model's eof projection 
 # vector (as the defaul PDO pattern). 
 ###############################################################################
 # Results: netcdf time series output
@@ -66,12 +66,12 @@ def save_result(x,time,lev,copy_from_source,dflt_units='k'):
         xproj.attrs['units']=dflt_units # eigenvectors of unit length
         xproj.attrs['info']="projection onto ensemble mean EOF pattern in eof_ens_mean.nc"
     ds=xarray.Dataset({'proj':xproj})
-    ds.to_netcdf('proj_ensmean.nc',format="NETCDF4")
+    ds.to_netcdf('proj.nc',format="NETCDF4")
     return ds
 
 # APPLIED OPERATION 
 # (used in output file name, added just before input file name '*.nc')
-app="pdo_proj_ensmean""
+app="pdo_proj"
 
  
 
@@ -95,7 +95,7 @@ for scen in SCENARIOLIST:
         for v in VARLIST:
             # 3-dim field
             # EOF projection eignevectors 
-            # The porjection vector is in standard application from historical scenario 
+            # The projection vector is in standard application from historical scenario 
             # eofscen is set as default to the historical scenario
             eofscen=TRANSLATE['historical']['scen']
             eoftime=TRANSLATE['historical']['time']
